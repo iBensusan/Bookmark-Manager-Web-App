@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark Manager</title>
+    <!-- Link to Bootstrap CSS for styling the app -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Bootstrap container class to center the content and provide margin and padding -->
+    <div class="container">
+        <!-- Bootstrap margin-top class (mt-5) adds spacing at the top -->
+        <h1 class="mt-5">Bookmark Manager</h1>
+
+        <div class="info-message">
+            <p>Add a new bookmark by entering a title and URL. You can then click on the title to visit the website, or delete the bookmark using the red button.</p>
+        </div>
+
+        <!-- Form to add a new bookmark -->
+        <form method="POST" class="mb-3">
+            {% csrf_token %}
+            <!-- Django {% csrf_token %} tag: This adds a CSRF token for security, preventing cross-site request forgery attacks -->
+            <div class="input-group">
+                <!-- Bootstrap form-control class for styling the input fields -->
+                <input type="text" class="form-control" name="title" placeholder="Bookmark Title" required>
+                <input type="url" class="form-control" name="url" placeholder="Bookmark URL" required>
+                <button class="btn btn-primary" type="submit">Add Bookmark</button>
+                <!-- Bootstrap button class for styling the submit button -->
+            </div>
+        </form>
+
+        <h3>Saved Bookmarks</h3>
+        <ul class="list-group">
+            <!-- Django for loop to iterate through the 'bookmarks' passed from the view -->
+            {% for bookmark in bookmarks %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title }}</a>
+                    <a href="{% url 'delete_bookmark' bookmark.id %}" class="btn btn-danger">Delete</a>
+                </li>
+            {% empty %}
+            <!-- If there are no bookmarks, this message is displayed -->
+                <li class="list-group-item">No bookmarks saved yet.</li>
+            {% endfor %}
+            <!-- End of the for loop -->
+        </ul>
+    </div>
+</body>
+</html>
